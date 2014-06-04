@@ -244,8 +244,7 @@ void DataLayer<Dtype>::CreatePrefetchThread() {
 
 template <typename Dtype>
 void DataLayer<Dtype>::JoinPrefetchThread() {
-  if(thread_.joinable())
-	  thread_.join();
+	thread_.join();
 }
 
 template <typename Dtype>

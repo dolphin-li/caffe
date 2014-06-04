@@ -263,8 +263,7 @@ void ImageDataLayer<Dtype>::ShuffleImages() {
 
 template <typename Dtype>
 void ImageDataLayer<Dtype>::JoinPrefetchThread() {
-  if(thread_.joinable())
-	  thread_.join();
+	thread_.join();
 }
 
 template <typename Dtype>

@@ -37,6 +37,9 @@
 build/*
 tmp/*
 bin/*.exe
+bin/logs/*
+bin/weights/*
+
 distribute/*
 *.testbin
 *.bin

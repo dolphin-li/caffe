@@ -92,6 +92,9 @@
     <ClInclude Include="..\..\src\caffe\proto\caffe_pretty_print.pb.h">
       <Filter>src\caffe\proto</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\caffe\util\folderhelper.h">
+      <Filter>include\caffe\util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\src\caffe\blob.cpp">
@@ -225,6 +228,9 @@
     </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caffe\util\folderhelper.cpp">
+      <Filter>src\caffe\util</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -432,8 +432,7 @@ namespace caffe {
 	template <typename Dtype>
 	void WindowDataLayer<Dtype>::JoinPrefetchThread() 
 	{
-		if(thread_.joinable())
-			thread_.join();
+		thread_.join();
 	}
 
 	template <typename Dtype>
