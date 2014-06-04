@@ -36,6 +36,7 @@
 # build, distribute, and bins
 build/*
 tmp/*
+bin/*.exe
 distribute/*
 *.testbin
 *.bin
@@ -67,3 +68,4 @@ _site
 *.sublime-workspace
 *.sublime-project
 
+*.suo
