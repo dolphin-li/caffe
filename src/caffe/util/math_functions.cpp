@@ -10,6 +10,12 @@
 #include "caffe/util/math_functions.hpp"
 #include "caffe/util/rng.hpp"
 
+#ifdef USE_MKL
+#pragma comment(lib, "mkl_core_dll.lib")
+#pragma comment(lib, "mkl_intel_ilp64_dll.lib")
+#pragma comment(lib, "mkl_intel_thread_dll.lib")
+#endif
+
 namespace caffe {
 
 template<>
@@ -408,7 +414,7 @@ int caffe_cpu_hamming_distance<float>(const int n, const float* x,
                                   const float* y) {
   int dist = 0;
   for (int i = 0; i < n; ++i) {
-    dist += __builtin_popcount(static_cast<uint32_t>(x[i]) ^
+    dist += __popcnt(static_cast<uint32_t>(x[i]) ^
                                static_cast<uint32_t>(y[i]));
   }
   return dist;
@@ -419,7 +425,7 @@ int caffe_cpu_hamming_distance<double>(const int n, const double* x,
                                    const double* y) {
   int dist = 0;
   for (int i = 0; i < n; ++i) {
-    dist += __builtin_popcountl(static_cast<uint64_t>(x[i]) ^
+    dist += (int)__popcnt64(static_cast<uint64_t>(x[i]) ^
                                 static_cast<uint64_t>(y[i]));
   }
   return dist;

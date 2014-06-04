@@ -2,7 +2,6 @@
 
 #include <stdint.h>
 #include <leveldb/db.h>
-#include <pthread.h>
 
 #include <string>
 #include <vector>
@@ -240,13 +239,13 @@ void DataLayer<Dtype>::CreatePrefetchThread() {
     prefetch_rng_.reset();
   }
   // Create the thread.
-  CHECK(!pthread_create(&thread_, NULL, DataLayerPrefetch<Dtype>,
-        static_cast<void*>(this))) << "Pthread execution failed.";
+  thread_ = std::thread(DataLayerPrefetch<Dtype>, static_cast<void*>(this));
 }
 
 template <typename Dtype>
 void DataLayer<Dtype>::JoinPrefetchThread() {
-  CHECK(!pthread_join(thread_, NULL)) << "Pthread joining failed.";
+  if(thread_.joinable())
+	  thread_.join();
 }
 
 template <typename Dtype>

@@ -3,7 +3,8 @@
 // Based on data_layer.cpp by Yangqing Jia.
 
 #include <stdint.h>
-#include <pthread.h>
+#include <thread>
+#include <map>
 
 #include <string>
 #include <vector>

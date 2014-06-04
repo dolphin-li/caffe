@@ -8,8 +8,7 @@
 #include <vector>
 
 #include "leveldb/db.h"
-#include "pthread.h"
-#include "hdf5.h"
+#include <thread>
 #include "boost/scoped_ptr.hpp"
 
 #include "caffe/blob.hpp"
@@ -21,61 +20,6 @@ namespace caffe {
 
 #define HDF5_DATA_DATASET_NAME "data"
 #define HDF5_DATA_LABEL_NAME "label"
-
-template <typename Dtype>
-class HDF5OutputLayer : public Layer<Dtype> {
- public:
-  explicit HDF5OutputLayer(const LayerParameter& param);
-  virtual ~HDF5OutputLayer();
-  virtual void SetUp(const vector<Blob<Dtype>*>& bottom,
-      vector<Blob<Dtype>*>* top);
-  inline std::string file_name() const { return file_name_; }
-
- protected:
-  virtual Dtype Forward_cpu(const vector<Blob<Dtype>*>& bottom,
-      vector<Blob<Dtype>*>* top);
-  virtual Dtype Forward_gpu(const vector<Blob<Dtype>*>& bottom,
-      vector<Blob<Dtype>*>* top);
-  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
-      const bool propagate_down, vector<Blob<Dtype>*>* bottom);
-  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
-      const bool propagate_down, vector<Blob<Dtype>*>* bottom);
-  virtual void SaveBlobs();
-
-  std::string file_name_;
-  hid_t file_id_;
-  Blob<Dtype> data_blob_;
-  Blob<Dtype> label_blob_;
-};
-
-
-template <typename Dtype>
-class HDF5DataLayer : public Layer<Dtype> {
- public:
-  explicit HDF5DataLayer(const LayerParameter& param)
-      : Layer<Dtype>(param) {}
-  virtual ~HDF5DataLayer();
-  virtual void SetUp(const vector<Blob<Dtype>*>& bottom,
-      vector<Blob<Dtype>*>* top);
-
- protected:
-  virtual Dtype Forward_cpu(const vector<Blob<Dtype>*>& bottom,
-      vector<Blob<Dtype>*>* top);
-  virtual Dtype Forward_gpu(const vector<Blob<Dtype>*>& bottom,
-      vector<Blob<Dtype>*>* top);
-  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
-      const bool propagate_down, vector<Blob<Dtype>*>* bottom);
-  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
-      const bool propagate_down, vector<Blob<Dtype>*>* bottom);
-  virtual void LoadHDF5FileData(const char* filename);
-
-  std::vector<std::string> hdf_filenames_;
-  unsigned int num_files_;
-  unsigned int current_file_;
-  hsize_t current_row_;
-  Blob<Dtype> data_blob_;
-  Blob<Dtype> label_blob_;
-};
 
 // TODO: DataLayer, ImageDataLayer, and WindowDataLayer all have the
 // same basic structure and a lot of duplicated code.
@@ -117,7 +61,8 @@ class DataLayer : public Layer<Dtype> {
   int datum_height_;
   int datum_width_;
   int datum_size_;
-  pthread_t thread_;
+  
+  std::thread thread_;
   shared_ptr<Blob<Dtype> > prefetch_data_;
   shared_ptr<Blob<Dtype> > prefetch_label_;
   Blob<Dtype> data_mean_;
@@ -164,7 +109,7 @@ class ImageDataLayer : public Layer<Dtype> {
   int datum_height_;
   int datum_width_;
   int datum_size_;
-  pthread_t thread_;
+  std::thread thread_;
   shared_ptr<Blob<Dtype> > prefetch_data_;
   shared_ptr<Blob<Dtype> > prefetch_label_;
   Blob<Dtype> data_mean_;
@@ -203,7 +148,7 @@ class WindowDataLayer : public Layer<Dtype> {
   virtual unsigned int PrefetchRand();
 
   shared_ptr<Caffe::RNG> prefetch_rng_;
-  pthread_t thread_;
+  std::thread thread_;
   shared_ptr<Blob<Dtype> > prefetch_data_;
   shared_ptr<Blob<Dtype> > prefetch_label_;
   Blob<Dtype> data_mean_;

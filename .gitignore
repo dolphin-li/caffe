@@ -26,8 +26,16 @@
 # Compiled MATLAB
 *.mex*
 
+# Vs
+*.sdf
+*.opensdf
+*.pdb
+*.obj
+*.cache
+
 # build, distribute, and bins
 build/*
+tmp/*
 distribute/*
 *.testbin
 *.bin

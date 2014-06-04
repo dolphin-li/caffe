@@ -3,7 +3,6 @@
 #include <cuda_runtime.h>
 #include <stdint.h>
 #include <leveldb/db.h>
-#include <pthread.h>
 
 #include <string>
 #include <vector>
