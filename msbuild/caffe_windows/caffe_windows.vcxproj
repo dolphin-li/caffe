@@ -170,7 +170,7 @@ copy ..\..\3rdparty\bin\opencv_objdetect* ..\..\bin\
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
-      <CudaRuntime>Shared</CudaRuntime>
+      <CudaRuntime>Static</CudaRuntime>
     </CudaCompile>
     <PreBuildEvent>
       <Command>set origin_dir=%cd%

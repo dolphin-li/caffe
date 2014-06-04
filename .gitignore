@@ -33,6 +33,7 @@
 *.obj
 *.cache
 *.deps
+*.ilk
 
 # build, distribute, and bins
 build/*
