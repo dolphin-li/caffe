@@ -149,6 +149,12 @@ message LayerParameter {
     SPLIT = 22;
     TANH = 23;
     WINDOW_DATA = 24;
+
+	BGR2LUMA = 100;
+	PATCH_SAMPLE = 101;
+	ADD_NOISE = 102;
+	PER_SAMPLE_SCALE = 103;
+	CALC_COV = 104;
   }
   optional LayerType type = 5; // the layer type from the enum above
 
@@ -176,10 +182,47 @@ message LayerParameter {
   optional PowerParameter power_param = 21;
   optional WindowDataParameter window_data_param = 20;
 
+  optional PatchSampleParameter patch_sample_param = 100;
+  optional AddNoiseParameter add_noise_param = 101;
+  optional Bgr2LumaParameter bgr2luma_param = 102;
+  optional PerSampleScaleParameter per_sample_scale_param = 103;
+  optional CalcCovParameter calc_cov_param = 129;
+
   // DEPRECATED: The layer parameters specified as a V0LayerParameter.
   // This should never be used by any code except to upgrade to the new
   // LayerParameter specification.
   optional V0LayerParameter layer = 1;
+}
+
+message Bgr2LumaParameter{
+  optional float scale = 1 [default=1];
+}
+
+message PatchSampleParameter{
+  optional uint32 sample_per_img = 1 [default=1];
+  optional uint32 patch_size = 2;
+}
+
+message AddNoiseParameter{
+  optional float scale = 1;
+  optional float noise_level_min = 2 [default = 0.];
+  optional float noise_level_max = 3;
+
+  // type:
+  //	0: gaussian
+  optional uint32 noise_type = 4 [default = 0];
+
+  // generally, noise levels are distributed uniformly, but we may want to manully emphasis some levels.
+  repeated float noise_level_first_sample_point = 10; 
+  repeated float noise_level_first_sample_rate = 11;
+}
+
+message PerSampleScaleParameter{
+  optional FillerParameter weight_filler = 1; // The filler for the weight
+}
+
+message CalcCovParameter{
+  optional bool scale_by_num = 1 [default = true];
 }
 
 // Message that stores parameters used by ConcatLayer

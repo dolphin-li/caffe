@@ -14,6 +14,27 @@ namespace caffe
 			boost::filesystem::create_directory(*it);
 	}
 
+	std::string fullfile(const std::string& path, const std::string& name)
+	{
+		std::string s = path;
+		if(s.size() == 0)
+			return name;
+		if(s.back() != '/' && s.back() != '\\')
+			s += '/';
+		s += name;
+		return s;
+	}
+
+	void path_name_ext(const std::string& full, std::string& path, std::string& name, std::string& ext)
+	{
+		boost::filesystem::path path1(full);
+
+		ext = path1.extension().string();
+		path = path1.remove_filename().string();
+		name = path1.filename().string();
+		name = name.substr(0, name.find_last_of('.'));
+	}
+
 	// recursive find all files with given extension
 	void get_all_files(std::string root, std::vector<std::string>& files, std::string ext)
 	{

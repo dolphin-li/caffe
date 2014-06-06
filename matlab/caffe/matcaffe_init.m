@@ -2,6 +2,9 @@ function  matcaffe_init(use_gpu, model_def_file, model_file)
 % matcaffe_init(model_def_file, model_file, use_gpu)
 % Initilize matcaffe wrapper
 
+addpath('D:\Git\caffe\bin');
+addpath('C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v5.5\bin');
+
 if nargin < 1
   % By default use CPU
   use_gpu = 0;

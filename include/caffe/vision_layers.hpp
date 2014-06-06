@@ -401,6 +401,107 @@ class SplitLayer : public Layer<Dtype> {
   int count_;
 };
 
+template <typename Dtype>
+class Bgr2LumaLayer : public Layer<Dtype> {
+ public:
+  explicit Bgr2LumaLayer(const LayerParameter& param)
+      : Layer<Dtype>(param) {}
+  virtual void SetUp(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+
+ protected:
+  virtual Dtype Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual Dtype Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+};
+
+template <typename Dtype>
+class PatchSampleLayer : public Layer<Dtype> {
+ public:
+  explicit PatchSampleLayer(const LayerParameter& param)
+      : Layer<Dtype>(param) {}
+  virtual void SetUp(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+
+ protected:
+  virtual Dtype Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual Dtype Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+};
+
+template <typename Dtype>
+class AddNoiseLayer : public Layer<Dtype> {
+ public:
+  explicit AddNoiseLayer(const LayerParameter& param)
+      : Layer<Dtype>(param) {}
+  virtual void SetUp(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+
+ protected:
+  virtual Dtype Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual Dtype Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+  void generate_noise_levels();
+
+  Blob<Dtype> noise_levels_;
+  Blob<Dtype> noises_;
+};
+
+template <typename Dtype>
+class CalcCovLayer : public Layer<Dtype> {
+ public:
+  explicit CalcCovLayer(const LayerParameter& param)
+      : Layer<Dtype>(param) {}
+  virtual void SetUp(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+
+ protected:
+  virtual Dtype Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual Dtype Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom){}
+  Blob<Dtype> multiplier_;
+  Blob<Dtype> Ex_;
+};
+
+template <typename Dtype>
+class PerSampleScaleLayer : public Layer<Dtype> {
+ public:
+  explicit PerSampleScaleLayer(const LayerParameter& param)
+      : Layer<Dtype>(param) {}
+  virtual void SetUp(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+
+ protected:
+  virtual Dtype Forward_cpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual Dtype Forward_gpu(const vector<Blob<Dtype>*>& bottom,
+      vector<Blob<Dtype>*>* top);
+  virtual void Backward_cpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom);
+  virtual void Backward_gpu(const vector<Blob<Dtype>*>& top,
+	  const bool propagate_down, vector<Blob<Dtype>*>* bottom);
+};
+
 }  // namespace caffe
 
 #endif  // CAFFE_VISION_LAYERS_HPP_

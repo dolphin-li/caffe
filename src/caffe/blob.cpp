@@ -201,6 +201,5 @@ void Blob<Dtype>::ToProto(BlobProto* proto, bool write_diff) const {
 }
 
 INSTANTIATE_CLASS(Blob);
-
 }  // namespace caffe
 

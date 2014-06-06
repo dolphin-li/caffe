@@ -9,6 +9,7 @@
 
 #include "mex.h"
 #include "caffe/caffe.hpp"
+#include "random"
 
 #define MEX_ARGS int nlhs, mxArray **plhs, int nrhs, const mxArray **prhs
 
@@ -272,7 +273,7 @@ static void init(MEX_ARGS) {
   mxFree(param_file);
   mxFree(model_file);
 
-  init_key = random();  // NOLINT(caffe/random_fn)
+  init_key = rand();  // NOLINT(caffe/random_fn)
 
   if (nlhs == 1) {
     plhs[0] = mxCreateDoubleScalar(init_key);

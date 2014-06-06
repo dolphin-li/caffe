@@ -34,11 +34,13 @@
 *.cache
 *.deps
 *.ilk
+*.mexw64
 
 # build, distribute, and bins
 build/*
 tmp/*
 bin/*.exe
+bin/*.lib
 bin/logs/*
 bin/weights/*
 

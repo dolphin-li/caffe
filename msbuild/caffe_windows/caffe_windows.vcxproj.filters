@@ -232,6 +232,21 @@
     <ClCompile Include="..\..\src\caffe\util\folderhelper.cpp">
       <Filter>src\caffe\util</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\src\caffe\layers\add_noise_layer.cpp">
+      <Filter>src\caffe\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caffe\layers\bgr2luma_layer.cpp">
+      <Filter>src\caffe\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caffe\layers\calc_cov_layer.cpp">
+      <Filter>src\caffe\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caffe\layers\patch_sample_layer.cpp">
+      <Filter>src\caffe\layers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\caffe\layers\per_sample_scale_layer.cpp">
+      <Filter>src\caffe\layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\src\caffe\proto\caffe.proto">
@@ -306,6 +321,21 @@
       <Filter>src\caffe\layers</Filter>
     </CudaCompile>
     <CudaCompile Include="..\..\src\caffe\layers\concat_layer.cu">
+      <Filter>src\caffe\layers</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\src\caffe\layers\add_noise_layer.cu">
+      <Filter>src\caffe\layers</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\src\caffe\layers\bgr2luma_layer.cu">
+      <Filter>src\caffe\layers</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\src\caffe\layers\calc_cov_layer.cu">
+      <Filter>src\caffe\layers</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\src\caffe\layers\patch_sample_layer.cu">
+      <Filter>src\caffe\layers</Filter>
+    </CudaCompile>
+    <CudaCompile Include="..\..\src\caffe\layers\per_sample_scale_layer.cu">
       <Filter>src\caffe\layers</Filter>
     </CudaCompile>
   </ItemGroup>

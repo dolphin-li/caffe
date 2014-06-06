@@ -14,6 +14,19 @@
 
 namespace caffe {
 
+// Decaf gemm provides a simpler interface to the dgmm functions, with the
+// limitation that the data has to be contiguous in memory.
+// NOTE: unlike all other matrix methods, this method assert Column-Majored
+template <typename Dtype>
+void caffe_cpu_dgmm(const cublasSideMode_t mode,
+    const int M, const int N, const Dtype* A, const Dtype* B, Dtype* C);
+
+// NOTE: unlike all other matrix methods, this method assert Column-Majored
+template <typename Dtype>
+void caffe_gpu_dgmm(const cublasSideMode_t mode,
+    const int M, const int N, const Dtype* A, const Dtype* B, Dtype* C);
+
+
 // Decaf gemm provides a simpler interface to the gemm functions, with the
 // limitation that the data has to be contiguous in memory.
 template <typename Dtype>
@@ -88,7 +101,13 @@ template <typename Dtype>
 void caffe_add(const int N, const Dtype* a, const Dtype* b, Dtype* y);
 
 template <typename Dtype>
+void caffe_gpu_add(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+template <typename Dtype>
 void caffe_sub(const int N, const Dtype* a, const Dtype* b, Dtype* y);
+
+template <typename Dtype>
+void caffe_gpu_sub(const int N, const Dtype* a, const Dtype* b, Dtype* y);
 
 template <typename Dtype>
 void caffe_mul(const int N, const Dtype* a, const Dtype* b, Dtype* y);
