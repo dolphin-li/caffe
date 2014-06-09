@@ -35,6 +35,7 @@
 *.deps
 *.ilk
 *.mexw64
+*.asv
 
 # build, distribute, and bins
 build/*
