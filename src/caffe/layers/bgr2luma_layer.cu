@@ -3,6 +3,13 @@
 #include "caffe/vision_layers.hpp"
 #include "caffe/util/math_functions.hpp"
 
+//#define IMAGE_DEBUG
+
+#ifdef IMAGE_DEBUG
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#endif
+
 namespace caffe {
 
 	template <typename Dtype>
@@ -41,6 +48,22 @@ namespace caffe {
 			rgb2luma_forward<Dtype><<<CAFFE_GET_BLOCKS(cl*n), CAFFE_CUDA_NUM_THREADS>>>(
 				top_data, bottom_data, n, cl, c, M[0], M[1], M[2], T);
 			CUDA_POST_KERNEL_CHECK;
+
+#ifdef IMAGE_DEBUG
+			cv::Mat img;
+			img.create(h, w, CV_8UC1);
+			for(int ni=0; ni<n; ni++)
+			{
+				const Dtype* pSrc = (*top)[i]->cpu_data() + ni*h*w;
+				for(int p=0; p<cl; p++)
+				{
+					img.at<char>(p/w, p%w) = pSrc[p]*255;
+				}
+				cv::imshow("luma", img);
+				cvWaitKey();
+			}
+#endif
+
 		}
 		return Dtype(0.);
 	}

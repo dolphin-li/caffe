@@ -16,7 +16,7 @@ namespace caffe {
 			(*top)[i]->Reshape(bottom[i]->num(), 1, bottom[i]->channels(), bottom[i]->channels());
 		multiplier_.Reshape(1, 1, bottom[0]->height(), bottom[0]->width());
 		caffe_set(multiplier_.count(), Dtype(1), multiplier_.mutable_cpu_data());
-		Ex_.Reshape(1, 1, bottom[0]->channels, 1);
+		Ex_.Reshape(1, 1, bottom[0]->channels(), 1);
 	}
 
 	template <typename Dtype>

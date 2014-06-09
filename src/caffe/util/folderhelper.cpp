@@ -30,9 +30,9 @@ namespace caffe
 		boost::filesystem::path path1(full);
 
 		ext = path1.extension().string();
-		path = path1.remove_filename().string();
 		name = path1.filename().string();
 		name = name.substr(0, name.find_last_of('.'));
+		path = path1.remove_filename().string();
 	}
 
 	// recursive find all files with given extension

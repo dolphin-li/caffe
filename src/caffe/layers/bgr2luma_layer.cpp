@@ -3,6 +3,13 @@
 #include "caffe/vision_layers.hpp"
 #include "caffe/util/math_functions.hpp"
 
+//#define IMAGE_DEBUG
+
+#ifdef IMAGE_DEBUG
+#include <opencv2/imgproc/imgproc.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#endif
+
 namespace caffe {
 
 	template <typename Dtype>
@@ -12,7 +19,6 @@ namespace caffe {
 		CHECK_GE(bottom.size(), 1);		  
 		CHECK_EQ(bottom.size(), top->size());
 		CHECK_EQ(bottom[0]->channels(), 3) << "only BGR-3 channels accepted";
-		CHECK_EQ((*top)[0]->channels(), 1) << "only 1-channel output accepted";
 
 		for(size_t i=0; i<bottom.size(); i++)
 			(*top)[i]->Reshape(bottom[i]->num(), 1, bottom[i]->height(), bottom[i]->width());
@@ -35,13 +41,25 @@ namespace caffe {
 			const int c = bottom[i]->channels();
 			const int h = bottom[i]->height();
 			const int w = bottom[i]->width();
+#ifdef IMAGE_DEBUG
+			cv::Mat img;
+			img.create(h, w, CV_MAKETYPE(CV_32F,1));
+#endif
 			const int cl = h*w;
 			for(int ni=0; ni<n; ni++)
 			{
 				Dtype* pDst = top_data + ni*h*w;
 				const Dtype* pSrc = bottom_data + ni*c*h*w;
 				for(int p=0; p<cl; p++)
+				{
 					pDst[p] = M[0]*pSrc[p] + M[1]*pSrc[p+cl] + M[2]*pSrc[p+cl+cl] + T;
+#ifdef IMAGE_DEBUG
+					img.at<float>(p/w, p%w) = pDst[p];
+#endif
+				}
+#ifdef IMAGE_DEBUG
+				cv::imshow("luma", img);
+#endif
 			}
 		}
 		return Dtype(0.);

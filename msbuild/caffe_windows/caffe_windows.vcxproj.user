@@ -4,12 +4,12 @@
     <LocalDebuggerWorkingDirectory>$(ProjectDir)../../bin</LocalDebuggerWorkingDirectory>
     <LocalDebuggerEnvironment>PATH=%PATH%;$(ProjectDir)../../bin</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>../examples/mnist/mnist_autoencoder_solver.prototxt</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>net/t1.prototxt</LocalDebuggerCommandArguments>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LocalDebuggerWorkingDirectory>$(ProjectDir)../../bin</LocalDebuggerWorkingDirectory>
     <LocalDebuggerEnvironment>PATH=%PATH%;$(ProjectDir)../../bin</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
-    <LocalDebuggerCommandArguments>../examples/mnist/mnist_autoencoder_solver.prototxt</LocalDebuggerCommandArguments>
+    <LocalDebuggerCommandArguments>net/t1.prototxt</LocalDebuggerCommandArguments>
   </PropertyGroup>
 </Project>

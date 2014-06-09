@@ -83,7 +83,7 @@ int generate_image_list(int argc, char* argv[])
 
 int main(int argc, char* argv[]) 
 {
-	return generate_image_list(argc, argv);
+	//return generate_image_list(argc, argv);
 
 	return train(argc, argv);
 	
