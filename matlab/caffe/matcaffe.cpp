@@ -6,9 +6,11 @@
 
 #include <string>
 #include <vector>
+#include <stdio.h>
 
 #include "mex.h"
 #include "caffe/caffe.hpp"
+#include "caffe\util\folderhelper.h"
 #include "random"
 
 #define MEX_ARGS int nlhs, mxArray **plhs, int nrhs, const mxArray **prhs
@@ -47,13 +49,34 @@ static int init_key = -2;
 
 static mxArray* do_forward(const mxArray* const bottom) {
   vector<Blob<float>*>& input_blobs = net_->input_blobs();
-  CHECK_EQ(static_cast<unsigned int>(mxGetDimensions(bottom)[0]),
-      input_blobs.size());
-  for (unsigned int i = 0; i < input_blobs.size(); ++i) {
-    const mxArray* const elem = mxGetCell(bottom, i);
-    const float* const data_ptr =
-        reinterpret_cast<const float* const>(mxGetPr(elem));
-    switch (Caffe::mode()) {
+
+  int num_dim = mxGetNumberOfDimensions(bottom);
+  int num_matlab_input = 1;
+  if (num_dim == 4)
+    num_matlab_input = mxGetDimensions(bottom)[3];
+    
+  int num_net_input = input_blobs.size();
+  if( num_matlab_input != num_net_input)
+  {
+    std::string s = "input number of samples not matched: " +  std::to_string(num_matlab_input) + 
+                    " vs. " + std::to_string(num_net_input);
+    mexErrMsgTxt(s.c_str());  
+  }
+
+  for (unsigned int i = 0; i < input_blobs.size(); ++i) 
+  {
+    const float* data_ptr = 0;
+    
+    if ( num_matlab_input == 1)    
+        data_ptr = reinterpret_cast<const float* const>(mxGetPr(bottom));
+    else
+    {
+      const mxArray* const elem = mxGetCell(bottom, i);
+      data_ptr = reinterpret_cast<const float*>(mxGetPr(elem));
+    }
+        
+    switch (Caffe::mode()) 
+    {
     case Caffe::CPU:
       memcpy(input_blobs[i]->mutable_cpu_data(), data_ptr,
           sizeof(float) * input_blobs[i]->count());
@@ -63,18 +86,24 @@ static mxArray* do_forward(const mxArray* const bottom) {
           sizeof(float) * input_blobs[i]->count(), cudaMemcpyHostToDevice);
       break;
     default:
-      LOG(FATAL) << "Unknown Caffe mode.";
+      mexErrMsgTxt("Unknown Caffe mode.");
     }  // switch (Caffe::mode())
   }
+
   const vector<Blob<float>*>& output_blobs = net_->ForwardPrefilled();
+
   mxArray* mx_out = mxCreateCellMatrix(output_blobs.size(), 1);
-  for (unsigned int i = 0; i < output_blobs.size(); ++i) {
+
+  for (unsigned int i = 0; i < output_blobs.size(); ++i) 
+  {
     // internally data is stored as (width, height, channels, num)
     // where width is the fastest dimension
     mwSize dims[4] = {output_blobs[i]->width(), output_blobs[i]->height(),
       output_blobs[i]->channels(), output_blobs[i]->num()};
+
     mxArray* mx_blob =  mxCreateNumericArray(4, dims, mxSINGLE_CLASS, mxREAL);
     mxSetCell(mx_out, i, mx_blob);
+
     float* data_ptr = reinterpret_cast<float*>(mxGetPr(mx_blob));
     switch (Caffe::mode()) {
     case Caffe::CPU:
@@ -86,10 +115,9 @@ static mxArray* do_forward(const mxArray* const bottom) {
           sizeof(float) * output_blobs[i]->count(), cudaMemcpyDeviceToHost);
       break;
     default:
-      LOG(FATAL) << "Unknown Caffe mode.";
+      mexErrMsgTxt("Unknown Caffe mode.");
     }  // switch (Caffe::mode())
   }
-
   return mx_out;
 }
 
@@ -259,6 +287,15 @@ static void get_init_key(MEX_ARGS) {
 }
 
 static void init(MEX_ARGS) {
+  if(!net_)
+  {
+    ::google::InitGoogleLogging(boost::filesystem::current_path().string().c_str());
+    ::google::SetStderrLogging(0);
+    string logPreFix = std::string("./logs/mat_caffe_log");
+    mkdir(logPreFix);
+    ::google::SetLogDestination(0, logPreFix.c_str());
+	}
+
   if (nrhs != 2) {
     LOG(ERROR) << "Only given " << nrhs << " arguments";
     mexErrMsgTxt("Wrong number of arguments");
@@ -278,11 +315,15 @@ static void init(MEX_ARGS) {
   if (nlhs == 1) {
     plhs[0] = mxCreateDoubleScalar(init_key);
   }
+  
+	::google::FlushLogFiles(0);
 }
 
 static void reset(MEX_ARGS) {
   if (net_) {
     net_.reset();
+    ::google::FlushLogFiles(0);
+    ::google::ShutdownGoogleLogging();
     init_key = -2;
     LOG(INFO) << "Network reset, call init before use it again";
   }
@@ -295,6 +336,7 @@ static void forward(MEX_ARGS) {
   }
 
   plhs[0] = do_forward(prhs[0]);
+  ::google::FlushLogFiles(0);
 }
 
 static void backward(MEX_ARGS) {
@@ -304,6 +346,7 @@ static void backward(MEX_ARGS) {
   }
 
   plhs[0] = do_backward(prhs[0]);
+  ::google::FlushLogFiles(0);
 }
 
 static void is_initialized(MEX_ARGS) {
@@ -345,6 +388,7 @@ static handler_registry handlers[] = {
  ** matlab entry point: caffe(api_command, arg1, arg2, ...)
  **/
 void mexFunction(MEX_ARGS) {
+
   if (nrhs == 0) {
     LOG(ERROR) << "No API command given";
     mexErrMsgTxt("An API command is requires");

@@ -41,9 +41,9 @@ Caffe::Caffe()
 }
 
 Caffe::~Caffe() {
-  if (cublas_handle_) CUBLAS_CHECK(cublasDestroy(cublas_handle_));
+ // if (cublas_handle_) CUBLAS_CHECK(cublasDestroy(cublas_handle_));
   if (curand_generator_) {
-    CURAND_CHECK(curandDestroyGenerator(curand_generator_));
+//    CURAND_CHECK(curandDestroyGenerator(curand_generator_));
   }
 }
 

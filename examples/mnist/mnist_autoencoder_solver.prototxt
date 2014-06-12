@@ -8,7 +8,7 @@ lr_policy: "fixed"
 display: 20
 max_iter: 4000000
 weight_decay: 0.0005
-snapshot: 10000
+snapshot: 2
 snapshot_prefix: "weights/mnist_autoencoder_train/"
 momentum: 0.9
 # solver mode: CPU or GPU

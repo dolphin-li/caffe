@@ -152,18 +152,9 @@ namespace caffe {
 		NetParameter net_param;
 		// For intermediate results, we will also dump the gradient values.
 		net_->ToProto(&net_param, param_.snapshot_diff());
-		string filename(param_.snapshot_prefix());
+		string filename;//(param_.snapshot_prefix());
 
-		boost::filesystem::path path1(filename);
-		path1 = path1.remove_filename();
-		std::vector<path> dirs2make;
-		for(path tp = path1; !exists(tp) && !tp.empty(); tp = tp.parent_path())
-		{
-			dirs2make.push_back(tp);
-			LOG(INFO) << tp.string();
-		}
-		for(std::vector<path>::reverse_iterator it = dirs2make.rbegin(); it != dirs2make.rend(); ++it)
-			boost::filesystem::create_directory(*it);
+		mkdir(filename);
 
 		const int kBufferSize = 20;
 		char iter_str_buffer[kBufferSize];
@@ -171,6 +162,11 @@ namespace caffe {
 		filename += iter_str_buffer;
 		LOG(INFO) << "Snapshotting to " << filename;
 		WriteProtoToBinaryFile(net_param, filename.c_str());
+
+		
+		NetParameter net_param1;
+		ReadProtoFromBinaryFile(filename, &net_param1);
+
 		SolverState state;
 		SnapshotSolverState(&state);
 		state.set_iter(iter_);
@@ -311,6 +307,7 @@ namespace caffe {
 
 	template <typename Dtype>
 	void SGDSolver<Dtype>::RestoreSolverState(const SolverState& state) {
+		return;//no need to do this
 		CHECK_EQ(state.history_size(), history_.size())
 			<< "Incorrect length of history blobs.";
 		LOG(INFO) << "SGDSolver: restoring history";

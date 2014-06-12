@@ -35,7 +35,7 @@ Dtype EuclideanLossLayer<Dtype>::Forward_cpu(const vector<Blob<Dtype>*>& bottom,
       diff_.mutable_cpu_data());
   Dtype dot = caffe_cpu_dot(count, diff_.cpu_data(), diff_.cpu_data());
   Dtype loss = dot / bottom[0]->num() / Dtype(2);
-
+  //ldptest
   //loss = sqrt(dot / bottom[0]->count())*255;
   return loss;
 }

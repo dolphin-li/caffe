@@ -158,6 +158,7 @@ copy ..\..\3rdparty\bin\opencv_objdetect* ..\..\bin\
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>BOOST_ALL_DYN_LINK;USE_MKL;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <AdditionalIncludeDirectories>../../include;../../3rdparty/include;$(CudaToolkitIncludeDir);../../3rdparty\include\hdf5;../../src;C:\Program Files (x86)\Intel\Composer XE 2013\mkl\include</AdditionalIncludeDirectories>
+      <OpenMPSupport>true</OpenMPSupport>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -180,7 +181,7 @@ cd %origin_dir%</Command>
     </PreBuildEvent>
     <PostBuildEvent>
       <Command>
-</Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

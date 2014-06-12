@@ -220,9 +220,6 @@
     <ClCompile Include="..\..\src\caffe\proto\caffe.pb.cc">
       <Filter>src\caffe\proto</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\caffe\layers\conv_layer.cu">
-      <Filter>src\caffe\layers</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\caffe\proto\caffe_pretty_print.pb.cc">
       <Filter>src\caffe\proto</Filter>
     </ClCompile>
@@ -254,12 +251,6 @@
     </None>
     <None Include="..\..\src\caffe\proto\caffe_pretty_print.proto">
       <Filter>src\caffe\proto</Filter>
-    </None>
-    <None Include="..\..\src\caffe\util\im2col.cu">
-      <Filter>src\caffe\util</Filter>
-    </None>
-    <None Include="..\..\src\caffe\util\math_functions.cu">
-      <Filter>src\caffe\util</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -338,5 +329,8 @@
     <CudaCompile Include="..\..\src\caffe\layers\per_sample_scale_layer.cu">
       <Filter>src\caffe\layers</Filter>
     </CudaCompile>
+    <CudaCompile Include="..\..\src\caffe\layers\conv_layer.cu" />
+    <CudaCompile Include="..\..\src\caffe\util\im2col.cu" />
+    <CudaCompile Include="..\..\src\caffe\util\math_functions.cu" />
   </ItemGroup>
 </Project>

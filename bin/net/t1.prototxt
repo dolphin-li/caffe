@@ -4,11 +4,13 @@ test_iter: 50
 test_interval: 1000
 test_compute_loss: true
 base_lr: 0.1
-lr_policy: "fixed"
+gamma: 0.0001
+power: 0.75
+lr_policy: "inv"
 display: 100
 max_iter: 4000000
 weight_decay: 0.0000
-snapshot: 10000
+snapshot: 2
 snapshot_prefix: "weights/t1/"
 momentum: 0.9
 # solver mode: CPU or GPU

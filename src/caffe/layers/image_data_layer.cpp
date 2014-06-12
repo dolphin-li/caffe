@@ -35,7 +35,6 @@ namespace caffe {
 		ImageDataLayer<Dtype>* layer =
 			reinterpret_cast<ImageDataLayer<Dtype>*>(layer_pointer);
 		CHECK(layer);
-		Datum datum;
 		CHECK(layer->prefetch_data_);
 		Dtype* top_data = layer->prefetch_data_->mutable_cpu_data();
 		Dtype* top_label = layer->prefetch_label_->mutable_cpu_data();
@@ -57,29 +56,27 @@ namespace caffe {
 		cv::Mat img;
 		img.create(crop_size, crop_size, CV_8UC3);
 #endif
-		// datum scales
-		const int lines_size = layer->lines_.size();
+		// pre-load images
+		const int lines_size = (int)layer->lines_.size();
 		const Dtype* mean = layer->data_mean_.cpu_data();
-		for (int item_id = 0; item_id < batch_size;) 
+		#pragma omp parallel for
+		for (int item_id = 0; item_id < batch_size; item_id++) 
 		{
-			// get a blob
-			CHECK_GT(lines_size, layer->lines_id_);
-
-			if (!ReadImageToDatum(layer->lines_[layer->lines_id_].first,
-				layer->lines_[layer->lines_id_].second,
-				new_height, new_width, &datum)) 
-			{
+			// READ the next image
+			Datum datum;
+			const int lineIds = (layer->lines_id_ + item_id)%lines_size;
+			if (!ReadImageToDatum(layer->lines_[lineIds].first,
+				layer->lines_[lineIds].second,
+				new_height, new_width, &datum) ) 
 				continue;
-			}
 
 			const int channels = datum.channels();
 			const int height = datum.height();
 			const int width = datum.width();
 			const int size = channels*height*width;
 			const string& data = datum.data();
-
-			if ( crop_size && (crop_size > width || crop_size>height) )
-				continue;
+			CHECK_GE(height, crop_size);
+			CHECK_GE(width, crop_size);
 
 			if (crop_size) 
 			{
@@ -163,24 +160,24 @@ namespace caffe {
 				}
 			}
 
-			top_label[item_id] = datum.label();
-			// go to the next iter
-			layer->lines_id_++;
-			item_id++;
-			if (layer->lines_id_ >= lines_size) 
-			{
-				// We have reached the end. Restart from the first.
-				DLOG(INFO) << "Restarting data prefetching from start.";
-				layer->lines_id_ = 0;
-				if (layer->layer_param_.image_data_param().shuffle()) 
-				{
-					layer->ShuffleImages();
-				}
-			}
+			top_label[item_id] = (Dtype)datum.label();
+
 #ifdef IMAGE_DEBUG
 			cv::imshow("crop", img);
 			cvWaitKey();
 #endif
+
+		}
+
+		// go to the next iter
+		layer->lines_id_ += batch_size;
+		if (layer->lines_id_ >= lines_size) 
+		{
+			// We have reached the end. Restart from the first.
+			DLOG(INFO) << "Restarting data prefetching from start.";
+			layer->lines_id_ = 0;
+			if (layer->layer_param_.image_data_param().shuffle()) 
+				layer->ShuffleImages();
 		}
 
 		return reinterpret_cast<void*>(NULL);
